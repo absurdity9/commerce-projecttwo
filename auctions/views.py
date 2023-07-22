@@ -3,13 +3,12 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-
+from django import forms
 from .models import User
 from .forms import createForm
 
 def index(request):
-    return render(request, "auctions/index.html")
-
+    return render(request, "auctions/index.html", {"create_listing_form": createForm})
 
 def login_view(request):
     if request.method == "POST":
@@ -64,6 +63,10 @@ def register(request):
 
 def createListing(request):
     if request.method == "Post":
-        pass
+        form = createForm(request.POST)
+        if form.is_valid():
+            pass
+        else:
+            pass
     else:
-        return render(request, "auctions/createlisting.html", { "createForm": createForm()})
+        return render(request, "auctions/createlisting.html", {"create_listing_form": createForm})
