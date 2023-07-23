@@ -72,7 +72,7 @@ def createItems_and_Listing(data):
     date_end = data["date_end"]
     
     # create an item record
-    item = Item.objects.create(title=title, desc=desc, floor_price=floor_price, photo_url=photo_url)
+    item = Items.objects.create(title=title, desc=desc, floor_price=floor_price, photo_url=photo_url)
     
     listing = Listing.objects.create(item=item, date_end=date_end)
     
@@ -80,10 +80,11 @@ def createItems_and_Listing(data):
 
 
 def createListing(request):
-    if request.method == "Post":
+    if request.method == "POST":
         form = createForm(request.POST)
         if form.is_valid():
             form_data = form.cleaned_data
+            print(form_data)
             item, listing = createItems_and_Listing (form_data)
             return redirect("Success")
         else:

@@ -7,3 +7,7 @@ class createForm (forms.Form):
     floor_price = forms.CharField(label="Minimum Price")
     photo_url = forms.URLField()
     date_end = forms.DateField()
+    
+    def clean_photo_url(self):
+        photo_url = self.cleaned_data['photo_url'].strip()
+        return photo_url
