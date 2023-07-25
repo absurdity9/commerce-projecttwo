@@ -11,7 +11,10 @@ from .models import Listing
 from .forms import createForm
 
 def index(request):
-    return render(request, "auctions/index.html", {"create_listing_form": createForm})
+    #context ={
+    #    "active_listings": Listing.item
+    #}
+    return render(request, "auctions/index.html", context)
 
 def login_view(request):
     if request.method == "POST":
@@ -84,9 +87,8 @@ def createListing(request):
         form = createForm(request.POST)
         if form.is_valid():
             form_data = form.cleaned_data
-            print(form_data)
             item, listing = createItems_and_Listing (form_data)
-            return redirect("Success")
+            return redirect("index")
         else:
             create_listing_form = createForm()
     else:
