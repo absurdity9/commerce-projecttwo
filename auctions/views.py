@@ -9,11 +9,18 @@ from .models import User
 from .models import Items
 from .models import Listing
 from .forms import createForm
+from django.utils import timezone
+
+#Get listing info
+def listing_list():
+    listings = Listing.objects.all()
+    return listings
 
 def index(request):
-    #context ={
-    #    "active_listings": Listing.item
-    #}
+    active_listings = Listing.objects.filter(date_end__gt=timezone.now())
+    context = {
+        "active_listings": active_listings
+    }
     return render(request, "auctions/index.html", context)
 
 def login_view(request):

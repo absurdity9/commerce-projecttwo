@@ -1,10 +1,36 @@
 {% extends "auctions/layout.html" %}
-
 {% block body %}
-    <h2>Active Listings</h2>
+<style>
+    .listing {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
 
-    <ul>
-        <!--{% for listing in active_listings %}
-        <li><a href=""> {{ listing.id }}: {{ listing.item }} </a></li>
-    </ul>
+    .listing-info {
+        flex: 1;
+        padding-right: 20px;
+    }
+
+    .listing-image {
+        flex: 1;
+    }
+</style>
+
+<h2>Active Listings</h2>
+
+{% for listing in active_listings %}
+    <div class="listing">
+        <div class="listing-info">
+            <h3>#{{ listing.id }} {{ listing.item.title }}</h3>
+            <p>{{ listing.item.desc }}</p>
+            <p>Starting at: {{ listing.item.floor_price }}</p>
+            <p>Ends at: {{ listing.date_end }}
+        </div>
+        <div class="listing-image">
+            <img src="{{ listing.item.photo_url }}" alt="Listing Photo" width="400" height="500">
+        </div>
+    </div>
+{% endfor %}
 {% endblock %}
