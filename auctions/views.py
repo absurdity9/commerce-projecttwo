@@ -105,7 +105,11 @@ def createListing(request):
 
 def categories(request):
     categories = Category.objects.all()
+    print(categories)
     context = {
         "categories": categories
     }
     return render(request, "auctions/categories.html", context)
+
+def category_detail(request):
+    return render(request, "auctions/category_detail.html")

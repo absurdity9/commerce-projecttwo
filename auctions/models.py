@@ -4,12 +4,17 @@ from datetime import datetime
 
 class User(AbstractUser):
     pass
+class Category(models.Model):
+    id = models.AutoField(primary_key=True)
+    category = models.CharField(max_length=300)
 
 class Items(models.Model):
     title = models.CharField(max_length=200)
     desc = models.CharField(max_length=500)
     floor_price = models.DecimalField(max_digits=10, decimal_places=2)
     photo_url = models.URLField(default='https://images.unsplash.com/photo-1626846116799-ad61f874f99d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80')    
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
 class Listing(models.Model):
     item = models.ForeignKey(Items, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
