@@ -5,8 +5,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.urls import reverse
 from django import forms
-from .models import User
-from .models import Items
+from .models import User, Items, Category
 from .models import Listing
 from .forms import createForm
 from django.utils import timezone
@@ -80,9 +79,12 @@ def createItems_and_Listing(data):
     floor_price = data["floor_price"]
     photo_url = data["photo_url"]
     date_end = data["date_end"]
+    category = data["category"]
     
     # create an item record
-    item = Items.objects.create(title=title, desc=desc, floor_price=floor_price, photo_url=photo_url)
+    category = Category.objects.create(category=category)
+    
+    item = Items.objects.create(title=title, desc=desc, floor_price=floor_price, photo_url=photo_url, category=category)
     
     listing = Listing.objects.create(item=item, date_end=date_end)
     
@@ -100,3 +102,10 @@ def createListing(request):
             create_listing_form = createForm()
     else:
         return render(request, "auctions/createlisting.html", {"create_listing_form": createForm})
+
+def categories(request):
+    categories = Category.objects.all()
+    context = {
+        "categories": categories
+    }
+    return render(request, "auctions/categories.html", context)
