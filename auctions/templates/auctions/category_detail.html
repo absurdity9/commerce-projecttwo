@@ -1,6 +1,22 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-  <h1>All Categories</h1>
-
+  <h1>{{ category_name.title }}</h1>
+  <ul>
+    {% if active_listings %}
+      {% for listing in active_listings %}
+        <li>
+          <h2>{{ listing.item.title }}</h2>
+          <img src="{{ listing.item.photo_url }}" width="400" height="500">
+          <p>Description: {{ listing.item.desc }}</p>
+          <p>Floor Price: {{ listing.item.floor_price }}</p>
+          <p>Category: {{ listing.item.category.category }}</p>
+          <p>Date Created: {{ listing.date_created }}</p>
+          <p>Date End: {{ listing.date_end }}</p>
+        </li>
+      {% endfor %}
+    {% else %}
+      <li>No active listings found.</li>
+    {% endif %}
+  </ul>
 {% endblock %}

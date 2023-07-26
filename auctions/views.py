@@ -111,5 +111,22 @@ def categories(request):
     }
     return render(request, "auctions/categories.html", context)
 
-def category_detail(request):
-    return render(request, "auctions/category_detail.html")
+def category_detail(request, cat_name):
+    # Retrieve all items that belong to the specified category
+    items = Items.objects.filter(category__category=cat_name)
+
+    # Filter the items to only include those that have an end date after the current time
+    active_items = items.filter(listing__date_end__gt=timezone.now())
+
+    # Retrieve the active listings that correspond to the active items
+    active_listings = Listing.objects.filter(item__in=active_items)
+    print(active_listings)
+
+    # Create a context dictionary with the active listings and category name
+    context = {
+        'active_listings': active_listings,
+        'category_name': cat_name,
+    }
+
+    # Render the category_detail.html template with the context
+    return render(request, 'auctions/category_detail.html', context)

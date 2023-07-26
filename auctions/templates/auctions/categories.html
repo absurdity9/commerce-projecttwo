@@ -4,7 +4,7 @@
   <h1>All Categories</h1>
   <ul>
     {% for category in categories %}
-      <li><a href="{% url 'category_detail' %}">{{ category.category.title }}</a></li>
+      <li><a href="{% url 'category_detail' category.category %}">{{ category.category.title }}</a></li>
     {% empty %}
       <li>No categories found.</li>
     {% endfor %}
