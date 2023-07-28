@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.urls import reverse
 from django import forms
-from .models import User, Items, Category
+from .models import User, Items, Category, Comments
 from .models import Listing
 from .forms import createForm
 from django.utils import timezone
@@ -16,6 +16,8 @@ def listing_list():
     return listings
 
 def index(request):
+    username = request.session.get('username')
+    print(username)
     active_listings = Listing.objects.filter(date_end__gt=timezone.now())
     context = {
         "active_listings": active_listings
@@ -33,6 +35,7 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
+            request.session['username']=username
             return HttpResponseRedirect(reverse("index"))
         else:
             return render(request, "auctions/login.html", {
@@ -41,11 +44,9 @@ def login_view(request):
     else:
         return render(request, "auctions/login.html")
 
-
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
-
 
 def register(request):
     if request.method == "POST":
@@ -80,26 +81,23 @@ def createItems_and_Listing(data):
     photo_url = data["photo_url"]
     date_end = data["date_end"]
     category = data["category"]
-    
-    # create an item record
+    # create records
     category = Category.objects.create(category=category)
-    
     item = Items.objects.create(title=title, desc=desc, floor_price=floor_price, photo_url=photo_url, category=category)
-    
     listing = Listing.objects.create(item=item, date_end=date_end)
     
-    return item, listing
-
+    return category, item, listing
 
 def createListing(request):
     if request.method == "POST":
         form = createForm(request.POST)
         if form.is_valid():
             form_data = form.cleaned_data
-            item, listing = createItems_and_Listing (form_data)
+            category, item, listing = createItems_and_Listing (form_data)
             return redirect("index")
         else:
-            create_listing_form = createForm()
+            print("Error posting")
+            return render(request, "auctions/createlisting.html", {"create_listing_form": form})
     else:
         return render(request, "auctions/createlisting.html", {"create_listing_form": createForm})
 
@@ -112,21 +110,27 @@ def categories(request):
     return render(request, "auctions/categories.html", context)
 
 def category_detail(request, cat_name):
-    # Retrieve all items that belong to the specified category
+
     items = Items.objects.filter(category__category=cat_name)
 
-    # Filter the items to only include those that have an end date after the current time
     active_items = items.filter(listing__date_end__gt=timezone.now())
 
-    # Retrieve the active listings that correspond to the active items
     active_listings = Listing.objects.filter(item__in=active_items)
-    print(active_listings)
 
-    # Create a context dictionary with the active listings and category name
     context = {
         'active_listings': active_listings,
         'category_name': cat_name,
     }
-
-    # Render the category_detail.html template with the context
     return render(request, 'auctions/category_detail.html', context)
+
+def listing(request, itemid):
+    try:
+        listing = Listing.objects.get(item_id=itemid)
+        comments = Comments.objects.filter(item_id=itemid)
+    except Listing.DoesNotExist:
+        listing = None
+    context ={
+        'listing': listing,
+        'comments': comments
+        }
+    return render(request, "auctions/listing.html", context)

@@ -5,14 +5,12 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
     }
-
     .listing-info {
         flex: 1;
         padding-right: 20px;
     }
-
     .listing-image {
         flex: 1;
     }
@@ -26,10 +24,11 @@
             <h3>#{{ listing.id }} {{ listing.item.title }}</h3>
             <p>{{ listing.item.desc }}</p>
             <p>Starting at: {{ listing.item.floor_price }}</p>
-            <p>Ends at: {{ listing.date_end }}
+            <p>Ends at: {{ listing.date_end }}</p>
+            <a href="{% url 'listing' listing.id %}"><button>View Listing</button></a>
         </div>
         <div class="listing-image">
-            <img src="{{ listing.item.photo_url }}" alt="Listing Photo" width="400" height="500">
+            <img src="{{ listing.item.photo_url }}" alt="Listing Photo" width="250" height="250">
         </div>
     </div>
 {% endfor %}

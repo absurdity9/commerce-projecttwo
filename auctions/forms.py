@@ -18,3 +18,6 @@ class createForm (forms.Form):
     def clean_photo_url(self):
         photo_url = self.cleaned_data['photo_url'].strip()
         return photo_url
+    
+class commentsForm(forms.Form):
+    detail = forms.CharField(label="Add comment", max_length=244)

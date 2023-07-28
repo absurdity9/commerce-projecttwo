@@ -1,0 +1,60 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<style>
+  .listing {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .comments {
+    margin-top: 20px;
+    flex-direction: column;
+    flex: 0.3;
+  }
+  .listing-info {
+    flex: 0.3;
+    padding-right: 20px;
+  }
+.listing-image {
+    flex: 0.3;
+}
+</style>
+
+{% if listing %}
+<div class="listing">
+  <div class="listing-info">
+    <h1>{{ listing.item.title }}</h1>
+    <p>{{ listing.item.desc }}</p>
+    <p>Starting at: {{ listing.item.floor_price }}</p>
+    <p>Ends at: {{ listing.date_end }}
+      {% if user.is_authenticated %}
+    <div>
+      <a href=""><button>Save to <strong>{{ user.username }}</strong>'s watchlist</button></a>
+    </div>
+    {% endif %}
+  </div>
+  <div class="listing-image">
+          <img src="{{ listing.item.photo_url }}" alt="Listing Photo" width="500" height="500">
+  </div>
+  {% else %}
+    <p>This item does not exist</p>
+  {% endif %}
+
+  {% if user.is_authenticated %}
+    <div class="comments">
+      <h2>Comments</h2>
+      {% for comment in comments %}
+    <div>
+        <p>{{ comment.detail }}</p>
+        <p>Posted on: {{ comment.date_created }} by {{comment.userid }}</p>
+    </div>
+{% endfor %}
+    </div>
+  {% else %}
+      Sign in to see comments and bids
+  {% endif %}
+
+{% endblock %}

@@ -13,6 +13,7 @@
           <p>Category: {{ listing.item.category.category }}</p>
           <p>Date Created: {{ listing.date_created }}</p>
           <p>Date End: {{ listing.date_end }}</p>
+          <a href="{% url 'listing' listing.id %}"><button>View Listing</button></a>
         </li>
       {% endfor %}
     {% else %}
