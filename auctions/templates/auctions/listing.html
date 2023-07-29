@@ -46,6 +46,11 @@
   {% if user.is_authenticated %}
     <div class="comments">
       <h2>Comments</h2>
+      <form action="" method="POST">
+        {% csrf_token %}
+        {{ create_comments_form.as_p }}
+    <input type="submit" value="Add comment">
+    </form>
       {% for comment in comments %}
     <div>
         <p>{{ comment.detail }}</p>

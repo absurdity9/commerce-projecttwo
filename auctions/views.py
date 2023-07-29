@@ -7,8 +7,9 @@ from django.urls import reverse
 from django import forms
 from .models import User, Items, Category, Comments
 from .models import Listing
-from .forms import createForm
+from .forms import createForm, commentsForm
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
 #Get listing info
 def listing_list():
@@ -97,7 +98,7 @@ def createListing(request):
             return redirect("index")
         else:
             print("Error posting")
-            return render(request, "auctions/createlisting.html", {"create_listing_form": form})
+            return render(request, "auctions/createlisting.html", {"create_listing_form": createForm})
     else:
         return render(request, "auctions/createlisting.html", {"create_listing_form": createForm})
 
@@ -123,14 +124,33 @@ def category_detail(request, cat_name):
     }
     return render(request, 'auctions/category_detail.html', context)
 
+@login_required
 def listing(request, itemid):
     try:
         listing = Listing.objects.get(item_id=itemid)
-        comments = Comments.objects.filter(item_id=itemid)
+        comments = Comments.objects.filter(item_id_id=itemid)
     except Listing.DoesNotExist:
         listing = None
-    context ={
-        'listing': listing,
-        'comments': comments
-        }
-    return render(request, "auctions/listing.html", context)
+        comments = None
+    if request.method == "POST":
+        form = commentsForm(request.POST)
+        if form.is_valid():
+            form_data = form.cleaned_data
+            comment = Comments.objects.create(
+                detail=form_data['detail'],
+                item_id_id=itemid,
+                userid_id=request.user.id,
+                date_created=timezone.now()
+            )
+            comment.save()
+            return redirect("listing", itemid=itemid)
+        else:
+            print("Error posting")
+            return render(request, "auctions/listing.html", {"create_comments_form": commentsForm})
+    else:
+        context ={
+            'listing': listing,
+            'comments': comments,
+            "create_comments_form": commentsForm
+            }
+        return render(request, "auctions/listing.html", context)
