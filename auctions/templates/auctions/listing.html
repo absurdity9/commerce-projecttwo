@@ -8,6 +8,7 @@
     flex-direction: column;
     justify-content: space-between;
     margin-bottom: 10px;
+    max-width: 50%%;
   }
   .comments {
     margin-top: 20px;
@@ -18,9 +19,16 @@
     flex: 0.3;
     padding-right: 20px;
   }
-.listing-image {
+  .listing-image {
     flex: 0.3;
-}
+  }
+  .comment-detail{
+    margin-top:20px;
+    border-bottom: 1px solid grey;
+  }
+  .actions-container{
+    margin-bottom: 20px; 
+  }
 </style>
 
 {% if listing %}
@@ -30,15 +38,22 @@
     <p>{{ listing.item.desc }}</p>
     <p>Starting at: {{ listing.item.floor_price }}</p>
     <p>Ends at: {{ listing.date_end }}
+
       {% if user.is_authenticated %}
-    <div>
-      <a href=""><button>Save to <strong>{{ user.username }}</strong>'s watchlist</button></a>
+    <div class="actions-container">
+      <a href=""><button>Save to {{ user.username }}'s watchlist</button></a>
+      <a href="{% url 'close_listing' itemid=listing.item_id%}"><button>Close the auction</button></a>
+      <form action="" method="POST">
+        <input type="submit" value="Make a bid">
+    </form>
     </div>
     {% endif %}
   </div>
+
   <div class="listing-image">
           <img src="{{ listing.item.photo_url }}" alt="Listing Photo" width="500" height="500">
   </div>
+
   {% else %}
     <p>This item does not exist</p>
   {% endif %}
@@ -49,10 +64,10 @@
       <form action="" method="POST">
         {% csrf_token %}
         {{ create_comments_form.as_p }}
-    <input type="submit" value="Add comment">
+        <input type="submit" value="Add comment">
     </form>
       {% for comment in comments %}
-    <div>
+    <div class="comment-detail">
         <p>{{ comment.detail }}</p>
         <p>Posted on: {{ comment.date_created }} by {{comment.userid }}</p>
     </div>

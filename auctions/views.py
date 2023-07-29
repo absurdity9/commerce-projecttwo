@@ -18,7 +18,6 @@ def listing_list():
 
 def index(request):
     username = request.session.get('username')
-    print(username)
     active_listings = Listing.objects.filter(date_end__gt=timezone.now())
     context = {
         "active_listings": active_listings
@@ -153,3 +152,10 @@ def listing(request, itemid):
             "create_comments_form": commentsForm
             }
         return render(request, "auctions/listing.html", context)
+
+def close_listing(itemid):
+    item_to_close = Listing.objects.get(item_id=itemid)
+    item_to_close.date_end = timezone.now()
+    item_to_close.save()
+    return item_to_close
+    
