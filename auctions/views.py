@@ -102,7 +102,7 @@ def createListing(request):
         return render(request, "auctions/createlisting.html", {"create_listing_form": createForm})
 
 def categories(request):
-    categories = Category.objects.all()
+    categories = Category.objects.order_by().values('category').distinct()
     print(categories)
     context = {
         "categories": categories
