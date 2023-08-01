@@ -123,7 +123,6 @@ def category_detail(request, cat_name):
     }
     return render(request, 'auctions/category_detail.html', context)
 
-
 def listing(request, itemid):
     try:
         listing = Listing.objects.get(item_id=itemid)
