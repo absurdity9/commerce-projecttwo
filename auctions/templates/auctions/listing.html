@@ -27,7 +27,8 @@
     border-bottom: 1px solid grey;
   }
   .actions-container{
-    margin-bottom: 20px; 
+    margin-bottom: 20px;
+    margin-top:10px;
   }
 </style>
 
@@ -41,24 +42,24 @@
 
     {% if user.is_authenticated %}
     <div class="actions-container">
-      <p>Owner is {{ listing.item.owner_id }} <p>
-      <p>You are {{ user.username }}<p>
-      <!-- Watchlist form -->
-      <form>
-        <a href=""><button>Save to {{ user.username }}'s watchlist</button></a>
-      </form>
       <!-- Close listing -->
-      {% if user.username == listing.item.owner_id %}
+      {% if user.username|stringformat:"s" == listing.item.owner_id|stringformat:"s" %}
         <form method="post" action="{% url 'close_listing' item_id=listing.item.id %}">
           {% csrf_token %}
           <input type="hidden" name="item_id" value="{{ listing.item.id }}">
           <button type="submit">Close Listing</button>
         </form>
+      {% else %}
+        <p>Item owned by{{ listing.item.owner_id|default_if_none:"None"|default:"Unknown" }}</p>
       {% endif %}
+       <!-- Watchlist form -->
+        <form>
+          <a href=""><button>Save to {{ user.username }}'s watchlist</button></a>
+        </form>
         <!-- Make a bid -->
-      <form action="" method="POST">
-        <input type="submit" value="Make a bid">
-      </form>
+        <form action="" method="POST">
+          <input type="submit" value="Make a bid">
+        </form>
     </div>
     {% endif %}
   </div>
