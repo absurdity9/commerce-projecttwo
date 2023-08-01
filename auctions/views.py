@@ -123,6 +123,7 @@ def category_detail(request, cat_name):
     }
     return render(request, 'auctions/category_detail.html', context)
 
+
 def listing(request, itemid):
     try:
         listing = Listing.objects.get(item_id=itemid)
@@ -130,6 +131,7 @@ def listing(request, itemid):
     except Listing.DoesNotExist:
         listing = None
         comments = None
+
     if request.method == "POST":
         form = commentsForm(request.POST)
         if form.is_valid():
@@ -149,13 +151,17 @@ def listing(request, itemid):
         context ={
             'listing': listing,
             'comments': comments,
-            "create_comments_form": commentsForm
+            "create_comments_form": commentsForm,
             }
         return render(request, "auctions/listing.html", context)
 
-def close_listing(itemid):
-    item_to_close = Listing.objects.get(item_id=itemid)
-    item_to_close.date_end = timezone.now()
-    item_to_close.save()
-    return item_to_close
-    
+def close_listing(request, item_id):
+    if request.method == "POST":
+        item = Listing.objects.get(item_id=item_id)
+        item.date_end = timezone.now()
+        item.save()
+        print(item.item.title)
+        return render(request, "auctions/close_listing.html", {"item": item})
+    else:
+        print("Not a request")
+        return HttpResponse("Form is not valid.")

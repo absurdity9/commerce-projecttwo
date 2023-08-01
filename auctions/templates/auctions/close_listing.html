@@ -1,0 +1,45 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<style>
+  .listing {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    max-width: 50%%;
+  }
+  .comments {
+    margin-top: 20px;
+    flex-direction: column;
+    flex: 0.3;
+  }
+  .listing-info {
+    flex: 0.3;
+    padding-right: 20px;
+  }
+  .listing-image {
+    flex: 0.3;
+  }
+  .comment-detail{
+    margin-top:20px;
+    border-bottom: 1px solid grey;
+  }
+  .actions-container{
+    margin-bottom: 20px; 
+  }
+</style>
+
+<div class="listing">
+  <div class="listing-info">
+    <h1> The auction has been successfully closed</h1>
+    
+
+  <div class="listing-image">
+  </div>
+
+
+  
+
+{% endblock %}

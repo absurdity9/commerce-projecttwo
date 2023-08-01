@@ -39,13 +39,26 @@
     <p>Starting at: {{ listing.item.floor_price }}</p>
     <p>Ends at: {{ listing.date_end }}
 
-      {% if user.is_authenticated %}
+    {% if user.is_authenticated %}
     <div class="actions-container">
-      <a href=""><button>Save to {{ user.username }}'s watchlist</button></a>
-      <a href="{% url 'close_listing' itemid=listing.item_id%}"><button>Close the auction</button></a>
+      <p>Owner is {{ listing.item.owner_id }} <p>
+      <p>You are {{ user.username }}<p>
+      <!-- Watchlist form -->
+      <form>
+        <a href=""><button>Save to {{ user.username }}'s watchlist</button></a>
+      </form>
+      <!-- Close listing -->
+      {% if user.username == listing.item.owner_id %}
+        <form method="post" action="{% url 'close_listing' item_id=listing.item.id %}">
+          {% csrf_token %}
+          <input type="hidden" name="item_id" value="{{ listing.item.id }}">
+          <button type="submit">Close Listing</button>
+        </form>
+      {% endif %}
+        <!-- Make a bid -->
       <form action="" method="POST">
         <input type="submit" value="Make a bid">
-    </form>
+      </form>
     </div>
     {% endif %}
   </div>
