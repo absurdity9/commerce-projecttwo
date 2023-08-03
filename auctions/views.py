@@ -205,3 +205,8 @@ def remove_watchlist(request,item_id):
         'listing': listing,
     }
     return render(request, "auctions/remove_watchlist.html", context)
+
+def add_bid(request):
+    context = {
+    }
+    return render(request, "auctions/add_bid.html", context)
