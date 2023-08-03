@@ -74,7 +74,8 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
-def createItems_and_Listing(data):
+def createItems_and_Listing(request, data):
+    ownerid = request.user.id
     title = data["title"]
     desc = data["desc"]
     floor_price = data["floor_price"]
@@ -83,7 +84,7 @@ def createItems_and_Listing(data):
     category = data["category"]
     # create records
     category = Category.objects.create(category=category)
-    item = Items.objects.create(title=title, desc=desc, floor_price=floor_price, photo_url=photo_url, category=category)
+    item = Items.objects.create(owner_id_id= ownerid, title=title, desc=desc, floor_price=floor_price, photo_url=photo_url, category=category)
     listing = Listing.objects.create(item=item, date_end=date_end)
     
     return category, item, listing
@@ -93,10 +94,11 @@ def createListing(request):
         form = createForm(request.POST)
         if form.is_valid():
             form_data = form.cleaned_data
-            category, item, listing = createItems_and_Listing (form_data)
+            category, item, listing = createItems_and_Listing (request, form_data)
             return redirect("index")
         else:
             print("Error posting")
+            print(form.errors)
             return render(request, "auctions/createlisting.html", {"create_listing_form": createForm})
     else:
         return render(request, "auctions/createlisting.html", {"create_listing_form": createForm})
@@ -124,6 +126,7 @@ def category_detail(request, cat_name):
     return render(request, 'auctions/category_detail.html', context)
 
 def listing(request, itemid):
+    user = request.user
     try:
         listing = Listing.objects.get(item_id=itemid)
         comments = Comments.objects.filter(item_id_id=itemid)
@@ -131,6 +134,13 @@ def listing(request, itemid):
         listing = None
         comments = None
 
+    #Check if this item is watchlisted by the user
+    if user.is_authenticated:
+        watchlist_items = Watchlist.objects.filter(userid_id=user.id).values_list('listingid__item_id', flat=True)
+        print(list(watchlist_items))
+    else:
+        watchlist_items = []
+    
     if request.method == "POST":
         form = commentsForm(request.POST)
         if form.is_valid():
@@ -151,6 +161,7 @@ def listing(request, itemid):
             'listing': listing,
             'comments': comments,
             "create_comments_form": commentsForm,
+            'watchlist_items': watchlist_items,
             }
         return render(request, "auctions/listing.html", context)
 
@@ -186,7 +197,11 @@ def add_watchlist(request, item_id):
     }
     return render(request, "auctions/add_watchlist.html", context)
 
-def remove_watchlist(request):
+def remove_watchlist(request,item_id):
+    watchlist = Watchlist.objects.get(userid=request.user.id)
+    listing = Listing.objects.get(item_id=item_id)
+    watchlist.listingid.remove(listing)
     context = {
+        'listing': listing,
     }
     return render(request, "auctions/remove_watchlist.html", context)

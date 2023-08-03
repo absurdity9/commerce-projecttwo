@@ -1,6 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@latest/css/bulma.min.css">
 
 <style>
   .listing {
@@ -27,15 +28,15 @@
     border-bottom: 1px solid grey;
   }
   .actions-container{
-    margin-bottom: 20px;
-    margin-top:10px;
+    display: block;
+    margin: 10px 0px 20px 0px
   }
 </style>
 
 {% if listing %}
 <div class="listing">
   <div class="listing-info">
-    <h1>{{ listing.item.title }}</h1>
+    <h1 class="title is-1">{{ listing.item.title }}</h1>
     <p>{{ listing.item.desc }}</p>
     <p>Starting at: {{ listing.item.floor_price }}</p>
     <p>Ends at: {{ listing.date_end }}
@@ -47,21 +48,24 @@
         <form method="post" action="{% url 'close_listing' item_id=listing.item.id %}">
           {% csrf_token %}
           <input type="hidden" name="item_id" value="{{ listing.item.id }}">
-          <button type="submit">Close Listing</button>
+          <button class="button is-primary" type="submit">Close Listing</button>
         </form>
       {% else %}
         <p>Item owned by {{ listing.item.owner_id|default_if_none:"None"|default:"Unknown" }}</p>
-      {% endif %}
+        {% endif %}
 
-      {% if watchlist.listingid.listing_id == listing.item.id %}
-       <!-- Watchlist form -->
-        <a href="{% url 'add_watchlist' item_id=listing.item.id %}"><button>Save to {{ user.username }}'s watchlist</button></a>
-      {% else %}
-        <a href="{% url 'remove_watchlist' item_id=listing.item.id %}"><button>Remove from my watchlist</button></a>        
-      {% endif %}
-        <!-- Make a bid -->
+      {% if listing.item.id in watchlist_items %}
+        <!-- Watchlisted, show remove -->
+        <a href="{% url 'remove_watchlist' item_id=listing.item.id %}"><button class="button is-primary">Remove from my watchlist</button></a>        
+        {% else %}
+        <hr class="solid">
+        <!-- Not watchlisted, show add -->
+        <a href="{% url 'add_watchlist' item_id=listing.item.id %}"><button class="button is-primary">Save to {{ user.username }}'s watchlist</button></a>
+        {% endif %}
+        <hr class="solid">
+      <!-- Make a bid -->
         <form action="" method="POST">
-          <input type="submit" value="Make a bid">
+          <button class="button is-primary" type="submit">Make a bid</button>
         </form>
     </div>
     {% endif %}
@@ -81,7 +85,7 @@
       <form action="" method="POST">
         {% csrf_token %}
         {{ create_comments_form.as_p }}
-        <input type="submit" value="Add comment">
+        <button class="button is-primary" type="submit">Add comment</button>
     </form>
       {% for comment in comments %}
     <div class="comment-detail">

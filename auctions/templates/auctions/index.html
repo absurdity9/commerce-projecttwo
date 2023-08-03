@@ -1,5 +1,6 @@
 {% extends "auctions/layout.html" %}
 {% block body %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@latest/css/bulma.min.css">
 <style>
     .listing {
         display: flex;
@@ -15,21 +16,22 @@
         flex: 1;
     }
 </style>
+<div class="is-four-fifths">
+    <h1 class="title is-2">Active Listings</h2>
 
-<h2>Active Listings</h2>
-
-{% for listing in active_listings %}
-    <div class="listing">
-        <div class="listing-info">
-            <h3>#{{ listing.id }} {{ listing.item.title }}</h3>
-            <p>{{ listing.item.desc }}</p>
-            <p>Starting at: {{ listing.item.floor_price }}</p>
-            <p>Ends at: {{ listing.date_end }}</p>
-            <a href="{% url 'listing' listing.id %}"><button>View Listing</button></a>
+    {% for listing in active_listings %}
+        <div class="listing">
+            <div class="listing-info">
+                <h3 class="title is-3">#{{ listing.id }} {{ listing.item.title }}</h3>
+                <p>{{ listing.item.desc }}</p>
+                <p>Starting at: {{ listing.item.floor_price }}</p>
+                <p>Ends at: {{ listing.date_end }}</p>
+                <a href="{% url 'listing' listing.id %}"><button class="button is-primary">View Listing</button></a>
+            </div>
+            <div class="listing-image">
+                <img src="{{ listing.item.photo_url }}" alt="Listing Photo" width="250" height="250">
+            </div>
         </div>
-        <div class="listing-image">
-            <img src="{{ listing.item.photo_url }}" alt="Listing Photo" width="250" height="250">
-        </div>
-    </div>
-{% endfor %}
-{% endblock %}
+    {% endfor %}
+    {% endblock %}
+</div>

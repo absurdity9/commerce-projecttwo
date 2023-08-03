@@ -28,6 +28,7 @@ class Listing(models.Model):
     item = models.ForeignKey(Items, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     date_end = models.DateTimeField(default=datetime(2023, 12, 31, 0, 0, 0))
+    highestbid = models.PositiveBigIntegerField(default=1)
     def __str__(self):
         return self.item.title
 
