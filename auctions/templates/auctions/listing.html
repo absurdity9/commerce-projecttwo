@@ -7,10 +7,13 @@
 <div class="container">
   <div class="is-three-fifths">
     <h1 class="title is-1">{{ listing.item.title }}</h1>
-    <p>{{ listing.item.desc }}</p>
-    <p>Starting at: {{ listing.item.floor_price }}</p>
-    <p>Ends at: {{ listing.date_end }}
-
+    
+    <div class="box">
+      <p>{{ listing.item.desc }}</p>
+      <p>Starting at: {{ listing.item.floor_price }}</p>
+      <p>Ends at: {{ listing.date_end }}</p>
+    </div>
+      <div class="block"></div>
     {% if user.is_authenticated %}
     <div class="actions-container">
       <!-- Close listing -->
@@ -21,10 +24,16 @@
           <button class="button is-primary" type="submit">Close Listing</button>
         </form>
       {% else %}
-        <p>Item owned by {{ listing.item.owner_id|default_if_none:"None"|default:"Unknown" }}</p>
+      <div class="box">
+        <p>Item owned by {{ listing.item.owner_id|default_if_none:"None"|default:"Unknown" }}</p>      </div>
         {% endif %}
         <div class="block"></div>
     {% endif %}
+    <article class="message is-info">
+      <div class="message-body">
+        <p>Highest Bid: {{ listing.highestbid }}
+        </div>
+    </article>
   </div>
 
   <div class="is-two-fifths">
