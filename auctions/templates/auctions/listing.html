@@ -3,39 +3,9 @@
 {% block body %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@latest/css/bulma.min.css">
 
-<style>
-  .listing {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    max-width: 50%%;
-  }
-  .comments {
-    margin-top: 20px;
-    flex-direction: column;
-    flex: 0.3;
-  }
-  .listing-info {
-    flex: 0.3;
-    padding-right: 20px;
-  }
-  .listing-image {
-    flex: 0.3;
-  }
-  .comment-detail{
-    margin-top:20px;
-    border-bottom: 1px solid grey;
-  }
-  .actions-container{
-    display: block;
-    margin: 10px 0px 20px 0px
-  }
-</style>
-
 {% if listing %}
-<div class="listing">
-  <div class="listing-info">
+<div class="container">
+  <div class="is-three-fifths">
     <h1 class="title is-1">{{ listing.item.title }}</h1>
     <p>{{ listing.item.desc }}</p>
     <p>Starting at: {{ listing.item.floor_price }}</p>
@@ -53,25 +23,11 @@
       {% else %}
         <p>Item owned by {{ listing.item.owner_id|default_if_none:"None"|default:"Unknown" }}</p>
         {% endif %}
-
-      {% if listing.item.id in watchlist_items %}
-        <!-- Watchlisted, show remove -->
-        <a href="{% url 'remove_watchlist' item_id=listing.item.id %}"><button class="button is-primary">Remove from my watchlist</button></a>        
-        {% else %}
-        <hr class="solid">
-        <!-- Not watchlisted, show add -->
-        <a href="{% url 'add_watchlist' item_id=listing.item.id %}"><button class="button is-primary">Save to {{ user.username }}'s watchlist</button></a>
-        {% endif %}
-        <hr class="solid">
-      <!-- Make a bid -->
-        <form action="" method="POST">
-          <button class="button is-primary" type="submit">Make a bid</button>
-        </form>
-    </div>
+        <div class="block"></div>
     {% endif %}
   </div>
 
-  <div class="listing-image">
+  <div class="is-two-fifths">
           <img src="{{ listing.item.photo_url }}" alt="Listing Photo" width="500" height="500">
   </div>
 
@@ -80,22 +36,61 @@
   {% endif %}
 
   {% if user.is_authenticated %}
-    <div class="comments">
-      <h2>Comments</h2>
+  {% if listing.item.id in watchlist_items %}
+  <!-- Watchlisted, show remove -->
+  <a href="{% url 'remove_watchlist' item_id=listing.item.id %}"><button class="button is-primary">Remove from my watchlist</button></a>        
+  {% else %}
+  <hr class="solid">
+  <!-- Not watchlisted, show add -->
+  <a href="{% url 'add_watchlist' item_id=listing.item.id %}"><button class="button is-primary">Save to {{ user.username }}'s watchlist</button></a>
+  {% endif %}
+  <hr class="solid">
+<!-- Make a bid -->
+<div class="card">
+  <div class="card-content">
+    <p class="title">
+      Place your bid
+    </p>
+    <p class="subtitle">
+      <form action="" method="POST">
+        <div class="field">
+          <label class="label">Amount</label>
+        </div>
+        <input class="input is-primary" type="text" width="280px" placeholder="£1 minimum">
+        <div class="block"></div>
+        <div class="field">
+          <p class="control">          
+            <button class="button is-primary" type="submit">Make a bid</button>
+          </p>
+          </div>
+      </form>
+    </p>
+  </div>
+</div>
+<div class="block"></div>
+<div class="card">
+  <div class="card-content">
+    <p class="title">
+    Comments
+    </p>
+    <p class="subtitle">
       <form action="" method="POST">
         {% csrf_token %}
         {{ create_comments_form.as_p }}
         <button class="button is-primary" type="submit">Add comment</button>
     </form>
       {% for comment in comments %}
-    <div class="comment-detail">
+    <div class="is-two-fifths">
         <p>{{ comment.detail }}</p>
         <p>Posted on: {{ comment.date_created }} by {{comment.userid }}</p>
     </div>
-{% endfor %}
+    {% endfor %}
     </div>
-  {% else %}
+    {% else %}
       Sign in to see comments and bids
-  {% endif %}
+    {% endif %}
+    </p>
+  </div>
+</div>
 
 {% endblock %}

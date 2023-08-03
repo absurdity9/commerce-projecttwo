@@ -16,7 +16,8 @@
         flex: 1;
     }
 </style>
-<div class="is-four-fifths">
+<div class="container">
+    <div class="is-four-fifths">
     <h1 class="title is-2">Active Listings</h2>
 
     {% for listing in active_listings %}
@@ -26,6 +27,7 @@
                 <p>{{ listing.item.desc }}</p>
                 <p>Starting at: {{ listing.item.floor_price }}</p>
                 <p>Ends at: {{ listing.date_end }}</p>
+                <div class="block"></div>
                 <a href="{% url 'listing' listing.id %}"><button class="button is-primary">View Listing</button></a>
             </div>
             <div class="listing-image">
@@ -34,4 +36,5 @@
         </div>
     {% endfor %}
     {% endblock %}
+    </div>
 </div>
