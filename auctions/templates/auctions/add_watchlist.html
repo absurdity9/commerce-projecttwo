@@ -1,0 +1,11 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<div>
+    <h1> The {{ listing.item.title }} added to your watchlist</h1>
+    <p> Go to the <a href="{% url 'watchlist' %}"> watchlist section </a> to see your watchlist</p>
+</div>
+
+
+{% endblock %}

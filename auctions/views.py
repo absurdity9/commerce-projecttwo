@@ -2,10 +2,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.shortcuts import redirect
+from django.shortcuts import redirect,  get_object_or_404
 from django.urls import reverse
 from django import forms
-from .models import User, Items, Category, Comments
+from .models import User, Items, Category, Comments, Watchlist
 from .models import Listing
 from .forms import createForm, commentsForm
 from django.utils import timezone
@@ -164,3 +164,29 @@ def close_listing(request, item_id):
     else:
         print("Not a request")
         return HttpResponse("Form is not valid.")
+    
+def watchlist(request):
+    context = {
+    }
+    return render(request, "auctions/watchlist.html", context)
+
+def add_watchlist(request, item_id):
+    user = request.user
+    listing = get_object_or_404(Listing, item_id=item_id)
+    # Check if user has a watchlist
+    if Watchlist.objects.filter(userid_id=user.id).exists():
+        watchlist = Watchlist.objects.get(userid_id=user.id)
+    else:
+        # Create a new watchlist for the user
+        watchlist = Watchlist.objects.create(userid=user)    
+    # Create records
+    watchlist.listingid.add(listing)
+    context = {
+        'listing': listing,
+    }
+    return render(request, "auctions/add_watchlist.html", context)
+
+def remove_watchlist(request):
+    context = {
+    }
+    return render(request, "auctions/remove_watchlist.html", context)

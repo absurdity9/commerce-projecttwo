@@ -39,3 +39,7 @@ class Comments(models.Model):
     
     def __str__(self):
         return self.detail
+    
+class Watchlist(models.Model):
+    userid = models.ForeignKey(User,on_delete=models.CASCADE)
+    listingid = models.ManyToManyField(Listing)
