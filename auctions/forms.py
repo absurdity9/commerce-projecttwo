@@ -11,7 +11,7 @@ class createForm (forms.Form):
     title = forms.CharField(label="Your item name", max_length=200)
     desc = forms.CharField(label="Description of the item", max_length=500)
     floor_price = forms.CharField(label="Minimum Price")
-    photo_url = forms.URLField()
+    photo_url = forms.URLField(required=False)
     date_end = forms.DateField(label="End date (MM/DD/YYYY)")
     category = forms.ChoiceField(choices=CATEGORY_CHOICES, label="Category")
     

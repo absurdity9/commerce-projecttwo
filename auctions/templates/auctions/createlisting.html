@@ -1,12 +1,13 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Create a New Listing</h2>
+    <h2 class="title is-2">Create a New Listing</h2>
     <p>You must be logged in to create a listing.</p>
-    <hr class="solid">
+    <div class="block"></div>
     <form action="" method="POST">
         {% csrf_token %}
         {{ create_listing_form.as_p }}
+    <div class="block"></div>
     <input type="submit" value="Create a listing">
     </form>
 

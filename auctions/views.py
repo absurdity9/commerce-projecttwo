@@ -251,3 +251,11 @@ def add_bid(request, item_id):
         'item_id': item_id
     }
     return render(request, "auctions/add_bid.html", context)
+
+def past(request):
+    username = request.session.get('username')
+    inactive_listings = Listing.objects.filter(date_end__lt=timezone.now())
+    context = {
+        "inactive_listings": inactive_listings
+    }
+    return render(request, "auctions/past.html", context)

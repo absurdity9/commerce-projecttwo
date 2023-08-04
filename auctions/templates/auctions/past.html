@@ -1,0 +1,42 @@
+{% extends "auctions/layout.html" %}
+{% block body %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@latest/css/bulma.min.css">
+<style>
+    .listing {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    .listing-info {
+        flex: 1;
+        padding-right: 20px;
+    }
+    .listing-image {
+        flex: 1;
+    }
+</style>
+    <div class="is-four-fifths">
+    <h2 class="title is-2">Past Listings</h2>
+
+    {% for listing in inactive_listings %}
+        <div class="listing">
+            <div class="listing-info">
+                <h3 class="title is-3">#{{ listing.id }} {{ listing.item.title }}</h3>
+                <p>{{ listing.item.desc }}</p>
+                <article class="message is-info">
+                  <div class="message-body">
+                    <p>Winning Bid: £{{ listing.highestbid }}
+                    </div>
+                </article>
+                <p>Ended at: {{ listing.date_end }}</p>
+                <div class="block"></div>
+                <a href="{% url 'listing' listing.id %}"><button class="button is-primary">View Listing</button></a>
+            </div>
+            <div class="listing-image">
+                <img src="{{ listing.item.photo_url }}" alt="Listing Photo" width="250" height="250">
+            </div>
+        </div>
+    {% endfor %}
+    {% endblock %}
+    </div>
