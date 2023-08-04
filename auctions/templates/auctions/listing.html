@@ -4,9 +4,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@latest/css/bulma.min.css">
 
 {% if listing %}
-<div class="container">
-  <div class="is-three-fifths">
-    <h1 class="title is-1">{{ listing.item.title }}</h1>
+  <div class="is-four-fifths">
+  <h1 class="title is-1">{{ listing.item.title }}</h1>
     
     <div class="box">
       <p>{{ listing.item.desc }}</p>
@@ -36,8 +35,8 @@
     </article>
   </div>
 
-  <div class="is-two-fifths">
-          <img src="{{ listing.item.photo_url }}" alt="Listing Photo" width="500" height="500">
+  <div class="is-four-fifths">
+    <img src="{{ listing.item.photo_url }}" alt="Listing Photo" width="500" height="500">
   </div>
 
   {% else %}
@@ -65,7 +64,7 @@
         <div class="field">
           <label class="label">Amount</label>
         </div>
-        <input class="input is-primary" type="text" width="280px" placeholder="£1 minimum">
+        <input class="input is-primary" name="bid_amount" type="text" width="280px" placeholder="£1 minimum">
         <div class="block"></div>
         <div class="field">
           <p class="control">          
@@ -100,6 +99,5 @@
     {% endif %}
     </p>
   </div>
-</div>
 
 {% endblock %}

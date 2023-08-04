@@ -206,7 +206,11 @@ def remove_watchlist(request,item_id):
     }
     return render(request, "auctions/remove_watchlist.html", context)
 
-def add_bid(request):
+def add_bid(request, item_id):
+    listing = Listing.objects.get(id=item_id)
+    current_bid = listing.highestbid
+    print(current_bid)
     context = {
+        'current_bid':current_bid
     }
     return render(request, "auctions/add_bid.html", context)
