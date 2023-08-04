@@ -31,10 +31,8 @@
                 </article>
                 <p>Ended at: {{ listing.date_end }}</p>
                 <div class="block"></div>
-                <a href="{% url 'listing' listing.id %}"><button class="button is-primary">View Listing</button></a>
             </div>
             <div class="listing-image">
-                <img src="{{ listing.item.photo_url }}" alt="Listing Photo" width="250" height="250">
             </div>
         </div>
     {% endfor %}

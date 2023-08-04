@@ -160,12 +160,19 @@ def listing(request, itemid):
             return render(request, "auctions/listing.html", {"create_comments_form": commentsForm})
     else:
         is_future_date = listing.date_end > timezone.now()
+        winning_user = None
+        if not is_future_date:
+            listing = Listing.objects.get(item_id=itemid)
+            winning_bid = listing.highestbid
+            winning_user = Bids.objects.get(listingid=listing, amount=winning_bid)
+            return winning_user   
         context ={
             'listing': listing,
             'comments': comments,
             "create_comments_form": commentsForm,
             'watchlist_items': watchlist_items,
             'is_future_date': is_future_date,
+            'winning_user': winning_user,
             }
         return render(request, "auctions/listing.html", context)
 

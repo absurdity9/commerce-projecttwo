@@ -50,9 +50,20 @@
     {% endif %}
     <article class="message is-info">
       <div class="message-body">
-        <p>Highest bid so far: £{{ listing.highestbid }}
-        </div>
+        <p>Highest bid so far: £{{ listing.highestbid }}</p>
+      </div>
     </article>
+    {% if winning_user %}
+    <article class="message is-success">
+      <div class="message-header">
+        <p>Winner!</p>
+      </div>
+      <div class="message-body">
+        You are the highest bidder when the auction closed! You have won the item! A member of our team will contact you shortly.
+      </div>
+    </article>
+    {% else %}
+    {% endif %}
   </div>
 
   {% else %}
@@ -62,10 +73,12 @@
   {% if user.is_authenticated %}
   {% if listing.item.id in watchlist_items %}
   <!-- Watchlisted, show remove -->
+  <div class="block"></div>
   <a href="{% url 'remove_watchlist' item_id=listing.item.id %}"><button class="button is-primary">Remove from my watchlist</button></a>        
   {% else %}
   <hr class="solid">
   <!-- Not watchlisted, show add -->
+  <div class="block"></div>
   <a href="{% url 'add_watchlist' item_id=listing.item.id %}"><button class="button is-primary">Save to {{ user.username }}'s watchlist</button></a>
   {% endif %}
   <hr class="solid">
@@ -95,18 +108,19 @@
 <div class="block"></div>
 <div class="card">
   <div class="card-content">
-    <p class="title">
-    Comments
-    </p>
+    <p class="title">Comments</p>
+    <div class="block"></div>
     <p class="subtitle">
       <form action="" method="POST">
         {% csrf_token %}
         {{ create_comments_form.as_p }}
+        <div class="block"></div>
         <button class="button is-primary" type="submit">Add comment</button>
     </form>
       {% for comment in comments %}
     <div class="is-two-fifths">
-        <p>{{ comment.detail }}</p>
+      <div class="block"></div>
+      <p class="subtitle">{{ comment.detail }}</p>
         <p>Posted on: {{ comment.date_created }} by {{comment.userid }}</p>
     </div>
     {% endfor %}
