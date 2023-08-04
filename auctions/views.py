@@ -209,8 +209,22 @@ def remove_watchlist(request,item_id):
 def add_bid(request, item_id):
     listing = Listing.objects.get(id=item_id)
     current_bid = listing.highestbid
+    result = ""
+    if request.method == "POST":
+        bid_amount = int(request.POST.get("bid_amount"))
+        if bid_amount > current_bid:
+            #
+            result = "You are now the highest bidder :)"
+        else:
+            result = "Your bid is too low :("
+    else:
+        print("Not post")
+        
     print(current_bid)
     context = {
-        'current_bid':current_bid
+        'current_bid':current_bid,
+        'result':result,
+        'bid_amount':bid_amount,
+        'item_id': item_id
     }
     return render(request, "auctions/add_bid.html", context)

@@ -60,7 +60,8 @@
       Place your bid
     </p>
     <p class="subtitle">
-      <form action="" method="POST">
+      <form action="{% url 'add_bid' item_id=listing.item.id %}" method="POST">
+        {% csrf_token %}
         <div class="field">
           <label class="label">Amount</label>
         </div>

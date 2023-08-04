@@ -4,8 +4,14 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@latest/css/bulma.min.css">
 
 <div class="container">
-    <h2 class="title is-2"> Your bid of {{ current_bid }} has been saved</h2>
-    <p>Press back to go back to the listing</p>
+    <h2 class="title is-2"> Your bidding result</h2>
+    <p>The bid is: {{ current_bid }}</p>
+    <div class="block"></div>
+    <p>Your bid is {{ bid_amount }}</p>
+    <div class="block"></div>
+    <p>{{ result }}</p>
+    <div class="block"></div>
+    <p><a href='{% url 'listing' itemid=item_id %}'> Go back to the listing</a></p>
 </div>
 
 
