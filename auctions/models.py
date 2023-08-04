@@ -52,6 +52,3 @@ class Bids(models.Model):
     listingid = models.ForeignKey(Listing, on_delete=models.CASCADE)
     amount = models.PositiveBigIntegerField(default=0)
     datecreated = models.DateTimeField(auto_now=True)
-    
-    def __str__(self):
-        return self.userid

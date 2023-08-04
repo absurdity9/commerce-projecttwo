@@ -5,11 +5,12 @@ from django.shortcuts import render
 from django.shortcuts import redirect,  get_object_or_404
 from django.urls import reverse
 from django import forms
-from .models import User, Items, Category, Comments, Watchlist
+from .models import User, Items, Category, Comments, Watchlist, Bids
 from .models import Listing
 from .forms import createForm, commentsForm
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.db.models import Max
 
 #Get listing info
 def listing_list():
@@ -126,6 +127,7 @@ def category_detail(request, cat_name):
     return render(request, 'auctions/category_detail.html', context)
 
 def listing(request, itemid):
+    datenow= timezone.now()
     user = request.user
     try:
         listing = Listing.objects.get(item_id=itemid)
@@ -133,7 +135,7 @@ def listing(request, itemid):
     except Listing.DoesNotExist:
         listing = None
         comments = None
-
+        
     #Check if this item is watchlisted by the user
     if user.is_authenticated:
         watchlist_items = Watchlist.objects.filter(userid_id=user.id).values_list('listingid__item_id', flat=True)
@@ -157,11 +159,13 @@ def listing(request, itemid):
             print("Error posting")
             return render(request, "auctions/listing.html", {"create_comments_form": commentsForm})
     else:
+        is_future_date = listing.date_end > timezone.now()
         context ={
             'listing': listing,
             'comments': comments,
             "create_comments_form": commentsForm,
             'watchlist_items': watchlist_items,
+            'is_future_date': is_future_date,
             }
         return render(request, "auctions/listing.html", context)
 
@@ -206,20 +210,39 @@ def remove_watchlist(request,item_id):
     }
     return render(request, "auctions/remove_watchlist.html", context)
 
+def check_bids(itemid):
+    listing = Listing.objects.get(item_id=itemid)
+    bids_for_listing = Bids.objects.filter(listingid=listing)
+    high_bid = bids_for_listing.aggregate(Max('amount'))['amount__max']
+    print(high_bid)
+    return high_bid
+
 def add_bid(request, item_id):
     listing = Listing.objects.get(id=item_id)
+    user = request.user
     current_bid = listing.highestbid
     result = ""
+    bid_amount = 0
     if request.method == "POST":
         bid_amount = int(request.POST.get("bid_amount"))
         if bid_amount > current_bid:
-            #
+            datecreated=timezone.now()
+            # create records
+            newbid = Bids.objects.create(
+                amount=bid_amount,
+                datecreated=datecreated,
+                listingid = listing,
+                userid = user,
+                )
+            listing.highestbid = bid_amount
+            listing.save()
             result = "You are now the highest bidder :)"
         else:
             result = "Your bid is too low :("
     else:
         print("Not post")
         
+    print("The current_bid is")
     print(current_bid)
     context = {
         'current_bid':current_bid,

@@ -4,13 +4,33 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@latest/css/bulma.min.css">
 
 {% if listing %}
-  <div class="is-four-fifths">
-  <h1 class="title is-1">{{ listing.item.title }}</h1>
-    
+  <div class="is-four-fifths">    
+  <div class="card">
+    <div class="card-image">
+      <figure class="">
+        <img src="{{ listing.item.photo_url }}" alt="Listing Photo" width="500" height="500">
+      </figure>
+    </div>
+    <div class="card-content">
+      <div class="media">
+        <div class="media-content">
+          <p class="title is-4">{{ listing.item.title }}</p>
+          <p class="subtitle is-6">Recommended price: {{ listing.item.floor_price }}</p>
+        </div>
+      </div>
+      <div class="content">
+        {{ listing.item.desc }}
+      </div>
+    </div>
+  </div>
+
     <div class="box">
-      <p>{{ listing.item.desc }}</p>
-      <p>Starting at: {{ listing.item.floor_price }}</p>
-      <p>Ends at: {{ listing.date_end }}</p>
+      {% if is_future_date %}
+        <p class="mb-1 pt-3">Listing end date: {{ listing.date_end.date }}</p>
+      {% else %}
+        <h4>Listing is finished</h4>
+        <p class="mb-1 pt-3">Ended at: {{ listing.date_end }}</p>
+      {% endif%}
     </div>
       <div class="block"></div>
     {% if user.is_authenticated %}
@@ -18,7 +38,7 @@
       <!-- Close listing -->
       {% if user.username|stringformat:"s" == listing.item.owner_id|stringformat:"s" %}
         <form method="post" action="{% url 'close_listing' item_id=listing.item.id %}">
-          {% csrf_token %}
+          {%csrf_token%}
           <input type="hidden" name="item_id" value="{{ listing.item.id }}">
           <button class="button is-primary" type="submit">Close Listing</button>
         </form>
@@ -30,13 +50,9 @@
     {% endif %}
     <article class="message is-info">
       <div class="message-body">
-        <p>Highest Bid: {{ listing.highestbid }}
+        <p>Highest Bid: £{{ listing.highestbid }}
         </div>
     </article>
-  </div>
-
-  <div class="is-four-fifths">
-    <img src="{{ listing.item.photo_url }}" alt="Listing Photo" width="500" height="500">
   </div>
 
   {% else %}
