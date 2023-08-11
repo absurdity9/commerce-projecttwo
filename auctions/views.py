@@ -106,7 +106,6 @@ def createListing(request):
 
 def categories(request):
     categories = Category.objects.order_by().values('category').distinct()
-    print(categories)
     context = {
         "categories": categories
     }
